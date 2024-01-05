@@ -1,15 +1,18 @@
 <div class="row">
     <div class="col-12">
+      <div class="alert alert-primary" role="alert" id="processAlert" style="display: none">
+        <strong>on Process</strong> Feed Service Running 
+      </div>
       <div class="card mb-4">
           <div class="card-header pb-0 p-3">
               <h6>Authors table</h6> 
               <form data-action = "http://localhost:8083/api/feed/allProcess" method="POST" 
                   enctype="multipart/form-data" id="processall">
-                  
+                @method('post')  
                 @csrf
                 <div class="row">
                     <div class="col-md-6 d-flex align-items-center">
-                      <input type=date  class=form-control id="tanggal" name="trip-start" />
+                      <input type=date  class=form-control id="tanggal" name="mydate" />
                     </div>
                     <div class="col-md-6 text-right">
                         <button type="button" class="btn bg-gradient-dark mb-0 submit-form" href="javascript:;"><i
@@ -381,58 +384,81 @@
         </div>
       </div>
     </div>
-    <meta name="csrf-token" content="{{ csrf_token() }}" >
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdn.socket.io/4.7.2/socket.io.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
       document.addEventListener('livewire:load', function(){
-        $.ajaxSetup({
-          headers: {
-            'X=CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-          }
-        });
 
         var socket = io.connect('http://localhost:3000');
         socket.on('new-message', function (data) {
           // console.log(data);
           data = jQuery.parseJSON(data);
           var status = "";
-          if (parseInt(data.procValue)<100) {
-            status = "working";
+
+          // cek processname 
+          if ( data.procName == "beginprocess") {
+            // disable button 
+          } else if ( data.procName == "endprocess") {
+            // enable button 
           } else {
-            status = "done";
-            data.procValue = 100;
-            document.getElementById('progressBar'+data.procName).classList.remove('bg-gradient-info');
-            document.getElementById('progressBar'+data.procName).classList.add('bg-gradient-success');
+            if (parseInt(data.procValue)<100) {
+              status = "working";
+            } else {
+              status = "done";
+              data.procValue = 100;
+              document.getElementById('progressBar'+data.procName).classList.remove('bg-gradient-info');
+              document.getElementById('progressBar'+data.procName).classList.add('bg-gradient-success');
+            }
+            console.log('progStatus'+data.procName);
+            document.getElementById('progStatus'+data.procName).innerHTML = status;          
+            document.getElementById('progressBar'+data.procName).style.width = data.procValue+'%';
+            document.getElementById('spanPercent'+data.procName).innerHTML = data.procValue+'%';
           }
-          console.log('progStatus'+data.procName);
-          document.getElementById('progStatus'+data.procName).innerHTML = status;          
-          document.getElementById('progressBar'+data.procName).style.width = data.procValue+'%';
-          document.getElementById('spanPercent'+data.procName).innerHTML = data.procValue+'%';
         })
         
         $(".submit-form").click(function (e) {
           var url = $('#processall').attr('data-action');
           var data = $('#processall').serialize();
-            console.log('test submit '+data);
+            console.log('test submit '+url);
 
+            $.ajaxSetup({
+                headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            var formData = new FormData();
+            formData.append('mydate','20240104');
+            
             $.ajax({
               url : url,
               method : 'POST',
-              data : data,
+              headers: {
+                  Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXBpL2xvZ2luIiwiaWF0IjoxNzA0NDQxNjQ1LCJleHAiOjE3MDQ0NDUyNDUsIm5iZiI6MTcwNDQ0MTY0NSwianRpIjoiNXFVS2Y4T2dJQ0FTdkJPMyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0._q3SxtKm7vl3EN7YpVaOOzLOXiLqq7fYnIpdb_xob0Q',
+              },
+              traditional : true,
+              data : formData,
               dataType : 'JSON',
               contentType : false,
               cache : false,
               processData : false,
               success:function(response)
               {
-                $(form).trigger("reset");
-                alert(response.success)
+                // $(form).trigger("reset");
+                var x = document.getElementById('processAlert');
+                // alert(response.state);
+               x.style.diplay ="show";
+                setTimeout(() => {
+                  x.style.diplay ="none";
+                }, 1000);
               },
-              error:function(response){         
-                alert(response.responseJSON);     
+              error:function(xhr, status, error){ 
+                // console.log(xhr);        
+                console.log(error);
+                alert(error);     
               }
             })
         });
