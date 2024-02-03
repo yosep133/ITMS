@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
       <div class="alert alert-primary" role="alert" id="processAlert" style="display: none">
-        <strong>on Process</strong> Feed Service Running 
+        <span id="spAlert"> <strong>on Process</strong> Feed Service Running </span>
       </div>
       <div class="card mb-4">
           <div class="card-header pb-0 p-3">
@@ -15,7 +15,7 @@
                       <input type=date  class=form-control id="tanggal" name="mydate" />
                     </div>
                     <div class="col-md-6 text-right">
-                        <button type="button" class="btn bg-gradient-dark mb-0 submit-form" href="javascript:;" id="processbtn"><i
+                        <button type="button" class="btn btn-primary mb-0 submit-form" href="javascript:;" id="btnprocess"><i
                                 class="fas fa-plus"></i>&nbsp;&nbsp;Process</button>
                     </div>
                 </div>
@@ -397,17 +397,13 @@
           // console.log(data);
           data = jQuery.parseJSON(data);
           var status = "";
+            document.getElementById('btnprocess').disable=false;
 
           // cek processname 
           if ( data.procName == "startProgress") {
             // disable button 
-            document.getElementById('progressbtn').disable = true ;
-            document.getElementById('tanggal').disable = true ;
-          } else if ( data.procName == "finishProgress") {
+          } else if ( data.procName == "endprocess") {
             // enable button 
-            document.getElementById('progressbtn').disable = false;
-            document.getElementById('tanggal').disable = true ;
-            
           } else {
             if (parseInt(data.procValue)<100) {
               status = "working";
@@ -434,10 +430,19 @@
                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            var mydate = ($('#tanggal').val()).replace('-','').replace('-','')   ;
+            if (mydate.trim().length === 0) {
+              // alert('date empty');
+              $('#processAlert').text("Date Empty");
+              $('#processAlert').show();
+              return "";
+            } else {              
+              $('#processAlert').text("Feed Service Running").wrapInner("<strong />");
+              $('#processAlert').show();
+            }
             var formData = new FormData();
-            formData.append('mydate','20240104');
-            
+            formData.append('mydate',mydate);
+            console.log(mydate);
             $.ajax({
               url : url,
               method : 'POST',
@@ -466,6 +471,10 @@
                 alert(error);     
               }
             })
+        });
+        
+        $("#tanggal").change(function (e) {
+            // get query 
         });
       })
       
