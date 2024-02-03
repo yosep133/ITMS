@@ -15,7 +15,7 @@
                       <input type=date  class=form-control id="tanggal" name="mydate" />
                     </div>
                     <div class="col-md-6 text-right">
-                        <button type="button" class="btn bg-gradient-dark mb-0 submit-form" href="javascript:;"><i
+                        <button type="button" class="btn bg-gradient-dark mb-0 submit-form" href="javascript:;" id="processbtn"><i
                                 class="fas fa-plus"></i>&nbsp;&nbsp;Process</button>
                     </div>
                 </div>
@@ -399,10 +399,15 @@
           var status = "";
 
           // cek processname 
-          if ( data.procName == "beginprocess") {
+          if ( data.procName == "startProgress") {
             // disable button 
-          } else if ( data.procName == "endprocess") {
+            document.getElementById('progressbtn').disable = true ;
+            document.getElementById('tanggal').disable = true ;
+          } else if ( data.procName == "finishProgress") {
             // enable button 
+            document.getElementById('progressbtn').disable = false;
+            document.getElementById('tanggal').disable = true ;
+            
           } else {
             if (parseInt(data.procValue)<100) {
               status = "working";
