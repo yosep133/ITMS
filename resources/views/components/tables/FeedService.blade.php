@@ -478,6 +478,34 @@
         
         $("#tanggal").change(function (e) {
             // get query 
+            $.ajax({
+              url : 'http://localhost:8083/api/feed/getProcessDate',
+              method : 'POST',
+              headers: {
+                  Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXBpL2xvZ2luIiwiaWF0IjoxNzA0NDQxNjQ1LCJleHAiOjE3MDQ0NDUyNDUsIm5iZiI6MTcwNDQ0MTY0NSwianRpIjoiNXFVS2Y4T2dJQ0FTdkJPMyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0._q3SxtKm7vl3EN7YpVaOOzLOXiLqq7fYnIpdb_xob0Q',
+              },
+              traditional : true,
+              data : formData,
+              dataType : 'JSON',
+              contentType : false,
+              cache : false,
+              processData : false,
+              success:function(response)
+              {
+                // $(form).trigger("reset");
+                var x = document.getElementById('processAlert');
+                // alert(response.state);
+               x.style.diplay ="show";
+                setTimeout(() => {
+                  x.style.diplay ="none";
+                }, 1000);
+              },
+              error:function(xhr, status, error){ 
+                // console.log(xhr);        
+                console.log(error);
+                alert(error);     
+              }
+            })
         });
       })
       
