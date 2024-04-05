@@ -432,7 +432,7 @@ function sidenavTypeOnResize() {
   }
 }
 
-// open socket
+// open socket CUST_CONN_LOG
 var socket = io.connect('http://localhost:3000');
 socket.on('new-message', function (data) {
   data = jQuery.parseJSON(data);

@@ -392,36 +392,38 @@
     <script>
       document.addEventListener('livewire:load', function(){
 
-        // var socket = io.connect('http://localhost:3000');
-        // socket.on('new-message', function (data) {
-        //   data = jQuery.parseJSON(data);
-        //   var status = "";
-        //     document.getElementById('btnprocess').disable=false;
-
-        //   // console.log(data);
-        //   // cek processname 
-        //   if ( data.procName == "startProgress") {
-        //     // disable button 
-        //       $('#btnprocess').attr("disabled","disable");
-        //   } else if ( data.procName == "endProgress") {
-        //     // enable button 
-        //       $('#btnprocess').removeAttr("disabled");
-        //       $('#processAlert').hide();
-        //   } else {
-        //     if (parseInt(data.procValue)<100) {
-        //       status = "working";
-        //     } else {
-        //       status = "done";
-        //       data.procValue = 100;
-        //       document.getElementById('progressBar'+data.procName).classList.remove('bg-gradient-info');
-        //       document.getElementById('progressBar'+data.procName).classList.add('bg-gradient-success');
-        //     }
-        //     console.log('progStatus'+data.procName);
-        //     document.getElementById('progStatus'+data.procName).innerHTML = status;          
-        //     document.getElementById('progressBar'+data.procName).style.width = data.procValue+'%';
-        //     document.getElementById('spanPercent'+data.procName).innerHTML = data.procValue+'%';
-        //   }
-        // });
+        var socket = io.connect('http://localhost:3000');
+        socket.on('new-message', function (data) {
+          data = jQuery.parseJSON(data);
+          var status = "";
+            document.getElementById('btnprocess').disable=false;
+            
+          if (data.date == $('#tanggal').val() ) {
+            // console.log(data);
+            // cek processname 
+            if ( data.procName == "startProgress") {
+              // disable button 
+                $('#btnprocess').attr("disabled","disable");
+            } else if ( data.procName == "endProgress") {
+              // enable button 
+                $('#btnprocess').removeAttr("disabled");
+                $('#processAlert').hide();
+            } else {
+              if (parseInt(data.procValue)<100) {
+                status = "working";
+              } else {
+                status = "done";
+                data.procValue = 100;
+                document.getElementById('progressBar'+data.procName).classList.remove('bg-gradient-info');
+                document.getElementById('progressBar'+data.procName).classList.add('bg-gradient-success');
+              }
+              console.log('progStatus'+data.procName);
+              document.getElementById('progStatus'+data.procName).innerHTML = status;          
+              document.getElementById('progressBar'+data.procName).style.width = data.procValue+'%';
+              document.getElementById('spanPercent'+data.procName).innerHTML = data.procValue+'%';
+            }           
+          }
+        });
         
         $(".submit-form").click(function (e) {
           var url = $('#processall').attr('data-action');
@@ -540,7 +542,16 @@
                         document.getElementById('progressBar'+index).style.width = 0+'%';
                         document.getElementById('spanPercent'+index).innerHTML = 0+'%';
                     }
-                    
+                    var feed_detail = response.data.feed_detail
+                    // process loading detail 
+                    feed_detail.forEach(data => {
+                      status = "done";            
+                      document.getElementById('progressBar'+data.process_name).classList.remove('bg-gradient-info');
+                      document.getElementById('progressBar'+data.process_name).classList.add('bg-gradient-success');         
+                      document.getElementById('progStatus'+data.process_name).innerHTML = status;          
+                      document.getElementById('progressBar'+data.process_name).style.width = data.status+'%';
+                      document.getElementById('spanPercent'+data.process_name).innerHTML = data.status+'%';
+                    });
                   } else {
                     console.log(feed);
                     
