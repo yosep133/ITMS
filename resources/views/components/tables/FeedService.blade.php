@@ -394,20 +394,28 @@
 
         var socket = io.connect('http://localhost:3000');
         socket.on('new-message', function (data) {
+            // console.log(data);
           data = jQuery.parseJSON(data);
           var status = "";
-            document.getElementById('btnprocess').disable=false;
+            // document.getElementById('btnprocess').disable=false;
+          // console.log(data);
             
           if (data.date == $('#tanggal').val() ) {
-            // console.log(data);
             // cek processname 
             if ( data.procName == "startProgress") {
               // disable button 
                 $('#btnprocess').attr("disabled","disable");
+                for (let index = 1; index <= 10; index++) {
+                    status = "waiting";            
+                      document.getElementById('progStatus'+index).innerHTML = status;          
+                      document.getElementById('progressBar'+index).style.width = 0+'%';
+                      document.getElementById('spanPercent'+index).innerHTML = 0+'%';
+                  }
             } else if ( data.procName == "endProgress") {
               // enable button 
-                $('#btnprocess').removeAttr("disabled");
-                $('#processAlert').hide();
+                // $('#btnprocess').removeAttr("disabled");
+                $('#processAlert').removeAttr("style").hide();
+                // console.log(data);
             } else {
               if (parseInt(data.procValue)<100) {
                 status = "working";
@@ -417,7 +425,7 @@
                 document.getElementById('progressBar'+data.procName).classList.remove('bg-gradient-info');
                 document.getElementById('progressBar'+data.procName).classList.add('bg-gradient-success');
               }
-              console.log('progStatus'+data.procName);
+              // console.log('progStatus'+data.procName);
               document.getElementById('progStatus'+data.procName).innerHTML = status;          
               document.getElementById('progressBar'+data.procName).style.width = data.procValue+'%';
               document.getElementById('spanPercent'+data.procName).innerHTML = data.procValue+'%';
