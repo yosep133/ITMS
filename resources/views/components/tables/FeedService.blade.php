@@ -407,9 +407,11 @@
                 $('#btnprocess').attr("disabled","disable");
                 for (let index = 1; index <= 10; index++) {
                     status = "waiting";            
-                      document.getElementById('progStatus'+index).innerHTML = status;          
-                      document.getElementById('progressBar'+index).style.width = 0+'%';
-                      document.getElementById('spanPercent'+index).innerHTML = 0+'%';
+                    document.getElementById('progStatus'+index).innerHTML = status;          
+                    document.getElementById('progressBar'+index).style.width = 0+'%';
+                    document.getElementById('spanPercent'+index).innerHTML = 0+'%';
+                    document.getElementById('progressBar'+data.procName).classList.add('bg-gradient-info');
+                    document.getElementById('progressBar'+data.procName).classList.remove('bg-gradient-success');
                   }
             } else if ( data.procName == "endProgress") {
               // enable button 
