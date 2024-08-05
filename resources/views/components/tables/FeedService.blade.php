@@ -6,7 +6,7 @@
       <div class="card mb-4">
           <div class="card-header pb-0 p-3">
               <h6>Authors table</h6> 
-              <form data-action = "http://localhost:8083/api/feed/allProcess" method="POST" 
+              <form data-action = "http://137.9.40.91:8083/api/feed/allProcess" method="POST" 
                   enctype="multipart/form-data" id="processall">
                 @method('post')  
                 @csrf
@@ -392,7 +392,7 @@
     <script>
       document.addEventListener('livewire:load', function(){
 
-        var socket = io.connect('http://localhost:3000');
+        var socket = io.connect('http://137.9.40.91:3000');
         socket.on('new-message', function (data) {
             // console.log(data);
           data = jQuery.parseJSON(data);
@@ -509,7 +509,7 @@
 
             // get query 
             $.ajax({
-              url : 'http://localhost:8083/api/feed/getProcessDate',
+              url : 'http://137.9.40.91:8083/api/feed/getProcessDate',
               method : 'POST',
               headers: {
                   Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXBpL2xvZ2luIiwiaWF0IjoxNzA0NDQxNjQ1LCJleHAiOjE3MDQ0NDUyNDUsIm5iZiI6MTcwNDQ0MTY0NSwianRpIjoiNXFVS2Y4T2dJQ0FTdkJPMyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0._q3SxtKm7vl3EN7YpVaOOzLOXiLqq7fYnIpdb_xob0Q',
